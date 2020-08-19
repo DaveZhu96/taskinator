@@ -225,7 +225,7 @@ var dragTaskHandler = function(event) {
   var taskId = event.target.getAttribute("data-task-id");
   event.dataTransfer.setData("text/plain", taskId);
   var getId = event.dataTransfer.getData("text/plain");
-console.log("getId:", getId, typeof getId);
+
 
 } ;
 var dropZoneDragHandler = function(event) {
@@ -273,9 +273,23 @@ saveTasks()
 };
 
 var saveTasks = function() {
-  localStorage.setItem("tasks", tasks);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 };
   
+var loadTasks = function() {
+  var savedTasks = localStorage.getItem("tasks");
+  if (!savedTasks) {
+    tasks = [];
+    return false;
+  }
+
+  savedTasks = JSON.parse(savedTasks);
+  // loop through savedTasks array
+for (var i = 0; i < savedTasks.length; i++) {
+  // pass each task object into the `createTaskEl()` function
+  createTaskEl(savedTasks[i]);
+}
+}
   pageContentEl.addEventListener("click", taskButtonHandler);
   pageContentEl.addEventListener("change", taskStatusChangeHandler);
   pageContentEl.addEventListener("dragstart", dragTaskHandler);
